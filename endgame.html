@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tàn cuộc – Chess Overview</title>
+<meta name="description" content="Nguyên tắc tàn cuộc, ví dụ mẫu KQ vs K, KR vs K, ô vuông tốt, opposition.">
+<style>
+  :root{--bg:#0b1220;--card:#0f172a;--ink:#e6eef7;--muted:#9bb0cf;--border:#1f2a44;--accent:#60a5fa}
+  *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#0a1120,#0b1220);color:var(--ink);font:16px/1.55 system-ui,Inter}
+  header,footer{border-bottom:1px solid var(--border);background:rgba(10,16,32,.6);backdrop-filter:blur(6px)}
+  header{position:sticky;top:0;z-index:3}
+  .wrap{max-width:1050px;margin:auto;padding:18px}
+  h1{margin:0;font-size:clamp(18px,2.6vw,24px)} .sub{color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px}
+  .board{font:24px/1.05 "Noto Sans Symbols 2","Segoe UI Symbol",system-ui;display:inline-grid;grid-template-columns:repeat(8,1em);gap:0;background:#0a1224;padding:8px;border-radius:10px;border:1px solid var(--border)}
+  .sq{width:1em;height:1em;display:grid;place-items:center}
+  .l{background:#e6eef7;color:#0a1224}.d{background:#7a98c9;color:#0a1224}
+  .pgn{font:14px ui-monospace,Consolas;background:#0c1630;border:1px solid var(--border);border-radius:10px;padding:8px;white-space:pre-wrap}
+  .hint{color:var(--muted)}
+  footer{margin-top:18px;padding:12px;color:var(--muted);text-align:center;border-top:1px solid var(--border)}
+  ul.check{margin:8px 0 0 18px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>🏁 Tàn cuộc <span class="sub">— nguyên tắc & ví dụ cơ bản</span></h1></div></header>
+<main class="wrap">
+  <p class="hint">Nguyên tắc vàng: <b>Vua tích cực</b>, <b>tạo tốt thông</b>, <b>đừng vội đẩy tốt</b>, canh “đối diện” (opposition).</p>
+
+  <div class="grid">
+    <div class="card">
+      <h3 style="margin:0">KQ vs K (chiếu hết hình hộp)</h3>
+      <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-top:8px">
+        <div id="b1"></div>
+        <div style="flex:1;min-width:220px">
+          <ul class="check">
+            <li>Dồn vua về mép bàn (hình hộp nhỏ dần).</li>
+            <li>Tránh stalemate: giữ “ô chờ”.</li>
+          </ul>
+          <div class="pgn">Ví dụ: 1.Qg7+ Ke8 2.Ke6 Kd8 3.Qd7#</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0">KR vs K (cắt vua bằng xe)</h3>
+      <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-top:8px">
+        <div id="b2"></div>
+        <div style="flex:1;min-width:220px">
+          <ul class="check">
+            <li>Dùng xe “cắt” hàng/cột, đưa vua mình tiến vào.</li>
+            <li>Tạo “thang” chiếu hết ở biên.</li>
+          </ul>
+          <div class="pgn">Ví dụ: 1.Ra7 Ke8 2.Ke6 Kf8 3.Kf6 Ke8 4.Ke6 Kf8 5.Kf6 Ke8 6.Ke6 Rd8 7.Rh7 Rd6+ 8.Kxd6</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0">Ô vuông tốt (square of the pawn)</h3>
+      <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-top:8px">
+        <div id="b3"></div>
+        <div style="flex:1;min-width:220px">
+          <p class="hint">Nếu vua địch không vào được “ô vuông” → tốt sẽ phong cấp.</p>
+          <div class="pgn">Mẹo: Vẽ hình vuông từ tốt tới hàng phong cấp; nếu vua địch ngoài khung, tốt chạy là thắng.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0">Opposition (đối diện)</h3>
+      <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-top:8px">
+        <div id="b4"></div>
+        <div style="flex:1;min-width:220px">
+          <p class="hint">Giữ khoảng cách 1 ô dọc/ngang với vua địch để giành quyền đi có lợi.</p>
+          <div class="pgn">Ví dụ: Vua đi “chờ” để ép đối thủ nhường đường.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>© 2025 • Tàn cuộc – Chess Overview</footer>
+
+<script>
+const UNI={'P':'♙','N':'♘','B':'♗','R':'♖','Q':'♕','K':'♔','p':'♟','n':'♞','b':'♝','r':'♜','q':'♛','k':'♚'};
+function boardHtml(fen){
+  const pos=fen.split(" ")[0]; const rows=pos.split("/");
+  let h=`<div class="board">`;
+  for(let r=0;r<8;r++){
+    const row=rows[r]; let c=0;
+    for(const ch of row){
+      if(/\d/.test(ch)){const n=parseInt(ch,10); for(let i=0;i<n;i++) h+=sq(r,c++,"")}
+      else{h+=sq(r,c++,UNI[ch]||"")}
+    }
+  }
+  h+=`</div>`; return h;
+}
+function sq(r,c,txt){ const light=((7-r+c)%2===0); return `<div class="sq ${light?'l':'d'}">${txt||""}</div>`; }
+
+// Ví dụ FEN
+document.getElementById("b1").innerHTML = boardHtml("6k1/8/8/8/8/8/5PPP/6KQ w - - 0 1");
+document.getElementById("b2").innerHTML = boardHtml("6k1/8/8/8/8/8/6K1/6R1 w - - 0 1");
+document.getElementById("b3").innerHTML = boardHtml("8/8/8/8/3k4/8/3P4/3K4 w - - 0 1");
+document.getElementById("b4").innerHTML = boardHtml("8/8/8/3k4/8/4K3/8/8 w - - 0 1");
+</script>
+</body>
+</html>
