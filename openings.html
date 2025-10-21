@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Khai cuộc – Chess Overview</title>
+<meta name="description" content="Tổng hợp các khai cuộc tiêu biểu, ý tưởng chính và chuỗi nước minh họa.">
+<style>
+  :root{--bg:#0b1220;--card:#0f172a;--ink:#e6eef7;--muted:#9bb0cf;--border:#1f2a44;--accent:#60a5fa}
+  *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#0a1120,#0b1220);color:var(--ink);font:16px/1.55 system-ui,Inter}
+  .wrap{max-width:1100px;margin:auto;padding:18px}
+  header,footer{border-bottom:1px solid var(--border);background:rgba(10,16,32,.6);backdrop-filter:blur(6px)}
+  header{position:sticky;top:0;z-index:3}
+  h1{margin:0;font-size:clamp(18px,2.6vw,24px)} .sub{color:var(--muted)}
+  .hero{padding:12px 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px}
+  .muted{color:var(--muted)}
+  details{border:1px solid var(--border);border-radius:10px;padding:10px;background:#0d1830}
+  summary{cursor:pointer}
+  .pgn{font:14px ui-monospace,Consolas,Menlo;background:#0c1630;border:1px solid var(--border);border-radius:10px;padding:8px;white-space:pre-wrap}
+  .board{font:24px/1.05 "Noto Sans Symbols 2","Segoe UI Symbol",system-ui;display:inline-grid;grid-template-columns:repeat(8,1em);gap:0;background:#0a1224;padding:8px;border-radius:10px;border:1px solid var(--border)}
+  .sq{width:1em;height:1em;display:grid;place-items:center}
+  .l{background:#e6eef7;color:#0a1224}.d{background:#7a98c9;color:#0a1224}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .tag{border:1px solid var(--border);border-radius:999px;padding:4px 8px;color:var(--muted);font-size:12px}
+  footer{margin-top:18px;padding:12px;color:var(--muted);text-align:center;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>♟️ Khai cuộc <span class="sub">— ý tưởng & chuỗi nước mẫu</span></h1></div></header>
+<main class="wrap">
+  <p class="muted">Mục tiêu khai cuộc: <b>trung tâm – phát triển – an toàn vua</b>. Dưới đây là 10 khai cuộc phổ biến kèm một dòng minh họa.</p>
+
+  <div id="list" class="grid"></div>
+</main>
+<footer>© 2025 • Khai cuộc – Chess Overview</footer>
+
+<script>
+const UNI={'P':'♙','N':'♘','B':'♗','R':'♖','Q':'♕','K':'♔','p':'♟','n':'♞','b':'♝','r':'♜','q':'♛','k':'♚'};
+const FENS = {
+  "Ruy Lopez":"rnbqkbnr/pppppppp/8/4p3/3P4/5N2/PPP1PPPP/RNBQKB1R b KQkq - 1 2",
+  "Italian (Giuoco)":"rnbqkbnr/pppppppp/8/4p3/2B5/8/PPPPPPPP/RNBQK1NR b KQkq - 2 2",
+  "Scotch":"rnbqkbnr/pppp1ppp/8/4p3/3PP3/8/PPP2PPP/RNBQKBNR b KQkq - 0 2",
+  "Queen's Gambit":"rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2",
+  "Slav Defense":"rnbqkbnr/pp1ppppp/2p5/8/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2",
+  "Caro–Kann":"rnbqkbnr/pp1ppppp/2p5/4P3/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2",
+  "Sicilian":"rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2",
+  "French":"rnbqkbnr/pppp1ppp/4p3/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq - 0 2",
+  "English":"rnbqkbnr/pppppppp/8/8/2P5/8/PP1PPPPP/RNBQKBNR b KQkq - 0 1",
+  "King's Indian Defense":"rnbqkb1r/pppppppp/5n2/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq - 1 2"
+};
+const LINES = {
+  "Ruy Lopez":"1.e4 e5 2.Nf3 Nc6 3.Bb5",
+  "Italian (Giuoco)":"1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5",
+  "Scotch":"1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4",
+  "Queen's Gambit":"1.d4 d5 2.c4",
+  "Slav Defense":"1.d4 d5 2.c4 c6",
+  "Caro–Kann":"1.e4 c6 2.d4 d5",
+  "Sicilian":"1.e4 c5",
+  "French":"1.e4 e6 2.d4 d5",
+  "English":"1.c4",
+  "King's Indian Defense":"1.d4 Nf6 2.c4 g6"
+};
+const IDEAS = {
+  "Ruy Lopez":["Ghim Nc6","Áp lực e5","Nhập thành nhanh"],
+  "Italian (Giuoco)":["Nhắm f7","C3–d4 mở trung tâm"],
+  "Scotch":["Đổi sớm ở trung tâm","Mở đường quân nhẹ"],
+  "Queen's Gambit":["Hy sinh tốt c4 để kiểm soát d5","Phát triển tự nhiên"],
+  "Slav Defense":["Cấu trúc chắc","…Bf5/Bg4"],
+  "Caro–Kann":["Vững trung tâm bằng c6–d5","…Bf5 trước …e6"],
+  "Sicilian":["Phản công cánh hậu","Bất đối xứng tạo cơ hội"],
+  "French":["Khóa trung tâm e5–e6","Phản công …c5"],
+  "English":["Kiểm soát d5 kiểu flank","g3–Bg2 dài hạn"],
+  "King's Indian Defense":["Đen phản công cánh vua","Trắng mở rộng cánh hậu"]
+};
+
+const list=document.getElementById("list");
+for(const name of Object.keys(LINES)){
+  const card=document.createElement("div"); card.className="card";
+  const board=render(FENS[name]||null);
+  card.innerHTML = `
+    <div class="row"><h3 style="margin:0">${name}</h3> ${IDEAS[name].map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    <div class="row" style="gap:12px;margin-top:10px">
+      <div>${board}</div>
+      <div style="flex:1">
+        <details open>
+          <summary><b>Dòng mẫu</b></summary>
+          <div class="pgn">${LINES[name]}</div>
+        </details>
+        <p class="muted" style="margin-top:8px">Mục tiêu: trung tâm • phát triển • an toàn vua. Tùy đối thủ, linh hoạt chuyển kế hoạch.</p>
+      </div>
+    </div>
+  `;
+  list.appendChild(card);
+}
+
+function render(fen){
+  if(!fen) return "";
+  const pos=fen.split(" ")[0]; const rows=pos.split("/");
+  let html=`<div class="board">`;
+  for(let r=0;r<8;r++){
+    const row=rows[r];
+    let col=0;
+    for(const ch of row){
+      if(/\d/.test(ch)){ const n=parseInt(ch,10); for(let i=0;i<n;i++){html+=sq(r,col++,"")}}
+      else{ html+=sq(r,col++, UNI[ch]||"") }
+    }
+  }
+  html+=`</div>`; return html;
+}
+function sq(r,c,txt){
+  const light=((7-r+c)%2===0); return `<div class="sq ${light?'l':'d'}">${txt||""}</div>`;
+}
+</script>
+</body>
+</html>
